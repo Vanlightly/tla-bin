@@ -49,7 +49,7 @@ main() {
 
 	echo "Downloading CommunityModules specs and jars"
 	wget https://github.com/tlaplus/CommunityModules/archive/master.zip
-	unzip master.zip .
+	unzip master.zip
 	
 	#print_version tla2tools.jar
 }
