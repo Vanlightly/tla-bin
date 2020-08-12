@@ -23,11 +23,15 @@ mkdir -p staging
 cp -r bin staging/bin
 
 # Modify the staged files so they use the $PREFIX
-sed -i'' -e s_PREFIX_"$PREFIX"_ staging/bin/*
+#sed -i'' -e s_PREFIX_"$PREFIX"_ staging/bin/*
+sed -i "s#PREFIX#${PREFIX}#g" staging/bin/*
 
 # Install everything
 install -dv $PREFIX/lib
 install -v tla2tools.jar $PREFIX/lib
+install -v CommunityModules.jar $PREFIX/lib
+install -v CommunityModules-master/lib/* $PREFIX/lib
+install -v CommunityModules-master/modules/*.tla $PREFIX/lib
 
 install -dv $PREFIX/bin
 install -v staging/bin/* $PREFIX/bin

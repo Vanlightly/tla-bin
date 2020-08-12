@@ -1,9 +1,10 @@
 #!/bin/bash
 #
-# Downloads the TLA+ binary image (tla2tools.jar) from the Microsoft Research
-# servers. If the file already exists locally, checks for an update & prints a
-# message if one was found.
+# Downloads the nightly build of tla2tools.jar
+# Downloads the CommunityModules artefacts
 #
+
+set -e
 
 download() {
 	if type curl > /dev/null 2>&1; then
@@ -33,27 +34,24 @@ print_version() {
 }
 
 main() {
-	echo "Downloading tla2tools.jar..."
-	before=$(date -r tla2tools.jar 2>/dev/null)
-	download https://tla.msr-inria.inria.fr/tlatoolbox/dist/tla2tools.jar
-	after=$(date -r tla2tools.jar 2>/dev/null)
+        sudo apt-get install unzip
 
-	if [ ! -e tla2tools.jar ]; then
-		echo "Couldn't download tla2tools.jar" >&2
-		exit 1
-	fi
+	LATEST=$(curl -s https://nightly.tlapl.us/products/ | grep linux | grep -zoP '<a[^<]*[^<]*href="\K[^"]+')
+	URL="https://nightly.tlapl.us/products/$LATEST"
+	echo "Downloading tla2tools.jar from: $URL"
 
-	if [ "$before" != "$after" ]; then
-		if [ -n "$before" ]; then
-			echo "Updated tla2tools.jar"
-			printf "New version: "
-			print_version tla2tools.jar
-		else
-			echo "Created tla2tools.jar"
-		fi
-	else
-		echo "No updates"
-	fi
+	wget $URL
+	unzip -j $LATEST "toolbox/tla2tools.jar" -d .
+
+	CM_URL=$(curl -s https://api.github.com/repos/tlaplus/communitymodules/releases/latest | grep "browser_download_url.*CommunityModules.jar" | cut -d : -f 2,3 | tr -d \")
+	echo "Downloading CommunityModules.jar from: $CM_URL"
+	wget $CM_URL
+
+	echo "Downloading CommunityModules specs and jars"
+	wget https://github.com/tlaplus/CommunityModules/archive/master.zip
+	unzip master.zip .
+	
+	#print_version tla2tools.jar
 }
 
 main
