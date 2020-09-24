@@ -9,8 +9,9 @@
 
 set -e
 
-JAVA_OPT="$1"
-PREFIX="$2"
+JAVA_HEAP="$1"
+JAVA_STACK="$2"
+PREFIX="$3"
 
 if [ -z "$PREFIX" ]; then
 	PREFIX=/usr/local
@@ -26,7 +27,8 @@ cp -r bin staging/bin
 # Modify the staged files so they use the $PREFIX
 #sed -i'' -e s_PREFIX_"$PREFIX"_ staging/bin/*
 sed -i "s#PREFIX#${PREFIX}#g" staging/bin/*
-sed -i "s#JAVA_OPT#${JAVA_OPT}#g" staging/bin/*
+sed -i "s#JAVA_OPT#${JAVA_HEAP}#g" staging/bin/*
+sed -i "s#JAVA_OPT#${JAVA_STACK}#g" staging/bin/*
 
 # Install everything
 install -dv $PREFIX/lib
