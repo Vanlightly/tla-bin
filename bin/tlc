@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DEFAULT_JAVA_OPTS="-XX:+IgnoreUnrecognizedVMOptions -XX:+UseParallelGC"
+DEFAULT_JAVA_OPTS="-XX:+IgnoreUnrecognizedVMOptions -XX:+UseParallelGC JAVA_OPT"
 
 if [ -z "$JAVA_OPTS" ]; then
   JAVA_OPTS="$DEFAULT_JAVA_OPTS"
